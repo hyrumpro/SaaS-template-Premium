@@ -1,6 +1,6 @@
 {
   "name": "shipsaas-template",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Premium Next.js SaaS foundation with authentication, payments, email, SEO, and deployment-ready UI.",
   "author": "ShipSaaS",
   "license": "SEE LICENSE IN LICENSE",

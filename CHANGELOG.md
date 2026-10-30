@@ -2,9 +2,18 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.1.0] - 2026-10-30
+
+### Fixed and hardened
+
+- **Proxy moved to `src/`** — Next.js silently ignores `proxy.ts` at the repo root, so route gating and session refresh never executed. `/playground` and `/waitlist` are now public routes; unauthenticated API calls return JSON 401s.
+- **Fail-fast environment validation** — `src/instrumentation.ts` runs `validateRequiredEnvVars()` at server startup; CI builds set `SKIP_ENV_VALIDATION=1`.
+- **Timestamps aligned to `timestamptz`** in `src/db/schema.ts` and migrations 004/005.
+- **Removed the deprecated `crypto` stub dependency** (Node's builtin `crypto` is used).
+- Docs: AGENTS.md/CLAUDE.md completed and corrected (theme system, 006 migration, instrumentation, proxy-location warning).
 
 ### Email integration (production-ready)
+
 - **Email log table** (`email_log`) — one row per send, updated by the Mailgun inbound webhook on delivery events. Soft FK to `users.id` so the log survives user hard-delete. See `supabase/migrations/005_email_log.sql` and `src/db/queries.ts`.
 - **Three new transactional templates** matching the modern-minimal design system:
   - `subscriptionRenewalUpcoming` — "Your subscription renews on <date>" reminder
@@ -28,13 +37,13 @@ All notable changes to this project will be documented in this file. The format 
 - **All send functions** now accept an optional `userId` and write to `email_log` with the Mailgun provider message id, enabling delivery tracking end-to-end.
 
 ### Documentation
+
 - **`LICENSE`** — professional commercial template license
 - **`SUGGESTIONS.md`** — production hardening ideas the template intentionally doesn't include (Redis, observability providers, background jobs, file storage, etc.) with reasoning and links
 - **`README.md`** — full rewrite as a professional sell-page
 
-
-
 ### Added
+
 - 24 themed color presets with live switching and dark mode
 - 55+ playground components catalog at `/playground`
 - In-app documentation at `/docs` (auth, database, email, payments, seo, styling, observability)
@@ -106,6 +115,7 @@ All notable changes to this project will be documented in this file. The format 
 - **`POST /api/waitlist`** endpoint with rate limiting (5/min/IP), idempotent on email conflict, and a graceful 404 when the feature is disabled. GET returns 405
 
 ### Changed
+
 - README rewritten to match the actual shipped code (npm, real theme/component counts, in-app docs links, production checklist)
 - Brand cleanup: removed all ShipFree / idee8 / gopump references across Docker, env files, and blog
 - Privacy and Terms pages are generic English boilerplate clearly marked as placeholder
@@ -115,6 +125,7 @@ All notable changes to this project will be documented in this file. The format 
 - Old landing `Enhanced*` / `WhyShip*` components removed in favor of the new sections
 
 ### Security
+
 - All webhook handlers verify provider signatures before parsing the body
 - Auth webhook requires `SUPABASE_WEBHOOK_SECRET` outside development
 - Rate-limited `/api/checkout` (10/min), `/api/stripe/portal` (10/min), `/api/account/delete` (3/hour) per IP
@@ -125,6 +136,7 @@ All notable changes to this project will be documented in this file. The format 
 ## [1.0.0] - 2026-01-08
 
 ### Added
+
 - Initial release
 - Next.js 16 with App Router and Turbopack
 - Supabase auth (email, magic link, Google OAuth)
