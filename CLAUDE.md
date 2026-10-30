@@ -1,7 +1,9 @@
 # Claude Code instructions for ShipSaaS
+
 # See AGENTS.md for the full operational notes.
 
 ## Stack
+
 - Next.js 16 (App Router, RSC by default, Turbopack) + React 19
 - TypeScript 5 strict, Tailwind CSS 3, Radix UI primitives
 - Supabase (auth, Postgres, RLS), Drizzle ORM 0.45
@@ -11,6 +13,7 @@
 - Optional PostHog + Sentry via the shim at `src/lib/observability.ts` (no-op unless env set + package installed)
 
 ## Ground rules
+
 1. **Server by default.** Components are RSC unless they need state, effects, or browser APIs. Add `"use client"` only when necessary.
 2. **Database access.** Use the helpers in `src/db/queries.ts`. They use `onConflictDoNothing` on every create so webhook retries are safe. Raw SQL goes in `supabase/migrations/`.
 3. **Webhooks.** Every webhook handler in `src/app/api/*/webhook/route.ts` must verify the provider signature before parsing the body, and early-return on duplicate `event_id`.
@@ -30,6 +33,7 @@
     - Avoid `text-gradient`, `font-black`, `border-primary/20`, `bg-gradient-to-br`, and `backdrop-blur-xl` on shell chrome. The showcase components under `src/components/playground/*` are exempt.
 
 ## Local commands
+
 ```bash
 npm install              # install
 npm run dev              # dev server with Turbopack
@@ -45,9 +49,12 @@ npm run assets:generate  # regenerate brand assets in public/
 
 CI runs lint + typecheck + build on every PR. The build must pass with no environment variables set except the placeholders in `.github/workflows/ci.yml`.
 
+Local dev: `cp .env.example .env.local` first. With `SKIP_EMAILS=true`, outgoing emails are logged to the server console. `next start` fails fast via `src/instrumentation.ts` when required env vars are missing; CI builds set `SKIP_ENV_VALIDATION=1`.
+
 ## Patterns
 
 ### Adding a new API route
+
 ```ts
 // src/app/api/example/route.ts
 import { NextResponse } from "next/server";
@@ -60,7 +67,11 @@ export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
   const ip = getClientIp(request);
-  const limit = rateLimit({ key: `example:${ip}`, limit: 10, windowMs: 60_000 });
+  const limit = rateLimit({
+    key: `example:${ip}`,
+    limit: 10,
+    windowMs: 60_000,
+  });
   if (!limit.allowed) return rateLimitResponse(limit);
 
   try {
@@ -75,15 +86,18 @@ export async function POST(request: Request) {
 ```
 
 ### Adding a database column
+
 1. Edit `src/db/schema.ts`
 2. Add a new migration file in `supabase/migrations/` with the matching DDL
 3. Update any query helpers in `src/db/queries.ts`
 4. Run `npm run db:generate` to confirm types match
 
 ### Adding a theme
-Add a new entry to the `THEMES` array in `src/config/theme.ts`. Provide `name`, CSS-variable values for both `light` and `dark`, and any accent overrides. The theme switcher in the navbar picks it up automatically.
+
+Add a new entry to the `THEME_PRESETS` record in `src/config/theme.ts` (each preset is `{ name, primary: {h,s,l}, accent: {h,s,l} }`). At runtime, `applyTheme()` writes the CSS variables to `<html>` and persists the choice in localStorage. The dropdown `ThemeSwitcher` is playground-scoped (`src/components/playground/ui/ThemeSwitcher.tsx`) - there is no navbar switcher; dark variants live under a `.dark` class (Tailwind `class` strategy) with no built-in toggle.
 
 ## Things to avoid
+
 - Hardcoded colors in components
 - `"use client"` at the top of a page component
 - Top-level `new Pool(...)`, `new Stripe(...)`, `new Mailgun(...)`, or `createClient(...)` instantiation

@@ -86,8 +86,12 @@ export const users = pgTable(
     metadata: jsonb("metadata"), // For custom fields: onboarding_completed, preferences, etc.
 
     // Timestamps
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
   },
   (table) => ({
     emailIdx: index("users_email_idx").on(table.email),
@@ -133,22 +137,30 @@ export const subscriptions = pgTable(
     intervalCount: integer("interval_count").default(1).notNull(), // For custom intervals (e.g., every 3 months)
 
     // Billing periods
-    currentPeriodStart: timestamp("current_period_start").notNull(),
-    currentPeriodEnd: timestamp("current_period_end").notNull(),
+    currentPeriodStart: timestamp("current_period_start", {
+      withTimezone: true,
+    }).notNull(),
+    currentPeriodEnd: timestamp("current_period_end", {
+      withTimezone: true,
+    }).notNull(),
     cancelAtPeriodEnd: boolean("cancel_at_period_end").default(false).notNull(),
-    canceledAt: timestamp("canceled_at"),
-    endedAt: timestamp("ended_at"),
+    canceledAt: timestamp("canceled_at", { withTimezone: true }),
+    endedAt: timestamp("ended_at", { withTimezone: true }),
 
     // Trial
-    trialStart: timestamp("trial_start"),
-    trialEnd: timestamp("trial_end"),
+    trialStart: timestamp("trial_start", { withTimezone: true }),
+    trialEnd: timestamp("trial_end", { withTimezone: true }),
 
     // Metadata
     metadata: jsonb("metadata"), // Store additional provider-specific data
 
     // Timestamps
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
   },
   (table) => ({
     userIdIdx: index("subscriptions_user_id_idx").on(table.userId),
@@ -191,7 +203,7 @@ export const orders = pgTable(
 
     // Refund information
     refundedAmount: integer("refunded_amount").default(0),
-    refundedAt: timestamp("refunded_at"),
+    refundedAt: timestamp("refunded_at", { withTimezone: true }),
     refundReason: text("refund_reason"),
 
     // Receipt
@@ -202,8 +214,12 @@ export const orders = pgTable(
     metadata: jsonb("metadata"), // Store product details, customer info, etc.
 
     // Timestamps
-    createdAt: timestamp("created_at").defaultNow().notNull(),
-    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
   },
   (table) => ({
     userIdIdx: index("orders_user_id_idx").on(table.userId),
@@ -258,8 +274,10 @@ export const payments = pgTable(
     metadata: jsonb("metadata"),
 
     // Timestamps
-    paidAt: timestamp("paid_at"),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
+    paidAt: timestamp("paid_at", { withTimezone: true }),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
   },
   (table) => ({
     userIdIdx: index("payments_user_id_idx").on(table.userId),
@@ -291,15 +309,19 @@ export const webhookEvents = pgTable(
     // Processing status
     processed: boolean("processed").default(false).notNull(),
     processing: boolean("processing").default(false).notNull(),
-    processingStartedAt: timestamp("processing_started_at"),
-    processedAt: timestamp("processed_at"),
+    processingStartedAt: timestamp("processing_started_at", {
+      withTimezone: true,
+    }),
+    processedAt: timestamp("processed_at", { withTimezone: true }),
     error: text("error"),
 
     // Event data
     payload: jsonb("payload").notNull(), // Full webhook payload
 
     // Timestamps
-    createdAt: timestamp("created_at").defaultNow().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
   },
   (table) => ({
     eventIdIdx: index("webhook_events_event_id_idx").on(table.eventId),
@@ -321,7 +343,9 @@ export const waitlist = pgTable(
     name: varchar("name", { length: 255 }),
     referrer: varchar("referrer", { length: 500 }),
     userAgent: varchar("user_agent", { length: 500 }),
-    createdAt: timestamp("created_at").defaultNow().notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
   },
   (table) => ({
     emailIdx: index("waitlist_email_idx").on(table.email),
@@ -356,8 +380,10 @@ export const emailLog = pgTable(
     failureReason: text("failure_reason"),
     tags: jsonb("tags"),
     metadata: jsonb("metadata"),
-    sentAt: timestamp("sent_at").defaultNow().notNull(),
-    lastEventAt: timestamp("last_event_at").defaultNow().notNull(),
+    sentAt: timestamp("sent_at", { withTimezone: true }).defaultNow().notNull(),
+    lastEventAt: timestamp("last_event_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
   },
   (table) => ({
     toEmailIdx: index("email_log_to_email_idx").on(table.toEmail),

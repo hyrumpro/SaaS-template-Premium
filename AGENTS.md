@@ -51,6 +51,8 @@ npm run db:init          # run scripts/init-db.ts
 
 CI runs lint + typecheck + build on every PR. The build must pass with no environment variables set except the placeholders in `.github/workflows/ci.yml`.
 
+Local dev: `cp .env.example .env.local` first. With `SKIP_EMAILS=true`, outgoing emails are logged to the server console. `next start` fails fast via `src/instrumentation.ts` when required env vars are missing; CI builds set `SKIP_ENV_VALIDATION=1`.
+
 ## File map
 
 ```
@@ -80,8 +82,9 @@ src/
   config/
     email.ts              # brand config (env-driven) used by every template
 content/blog/             # markdown posts (frontmatter required)
-supabase/migrations/      # 001 schema, 002 RLS, 003 RLS optim, 004 waitlist, 005 email_log
-proxy.ts                  # middleware (public paths, webhook allowlist)
+supabase/migrations/      # 001 schema, 002 RLS, 003 RLS optim, 004 waitlist, 005 email_log, 006 webhook processing
+src/proxy.ts              # proxy/middleware (public paths, webhook allowlist) - must live in src/, not the repo root
+src/instrumentation.ts   # env validation at server startup (SKIP_ENV_VALIDATION=1 skips in CI)
 scripts/init-db.ts        # db:init script
 scripts/test-email.ts     # `npm run email:test -- <template> <email>` to send a real email
 app/dev/emails/           # dev-only template preview (404 in production)
@@ -144,3 +147,4 @@ Add a new entry to the `THEME_PRESETS` record in `src/config/theme.ts` (each pre
 - Importing server-only modules from `"use client"` files
 - Calling `posthog-js` / `@sentry/nextjs` directly — go through the observability shim
 - Using `useSearchParams()` at the top of a client component without wrapping it in `<Suspense>` (it will break prerendering)
+- Moving `proxy.ts` out of `src/` - Next.js silently stops loading it

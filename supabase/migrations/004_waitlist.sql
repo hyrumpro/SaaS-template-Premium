@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS waitlist (
   name VARCHAR(255),
   referrer VARCHAR(500),
   user_agent VARCHAR(500),
-  created_at TIMESTAMP DEFAULT NOW() NOT NULL
+  created_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS waitlist_email_idx ON waitlist (email);

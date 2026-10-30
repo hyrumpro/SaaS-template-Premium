@@ -81,6 +81,8 @@ export async function proxy(request: NextRequest) {
     "/docs",
     "/changelog",
     "/rss.xml",
+    "/playground",
+    "/waitlist",
   ];
 
   // Check if current path is public

@@ -217,7 +217,7 @@ src/
     email.ts            # brand config (env-driven) used by every template
 content/blog/           # markdown posts (drop a .md file, get a page)
 supabase/migrations/    # 001 schema, 002 RLS, 003 RLS optim, 004 waitlist, 005 email_log
-proxy.ts                # Next.js middleware (public paths, webhook allowlist)
+src/proxy.ts            # Next.js proxy/middleware (public paths, webhook allowlist)
 scripts/
   init-db.ts            # db:init script (seed roles, etc.)
   test-email.ts         # npm run email:test -- <template> <email>
@@ -365,7 +365,7 @@ Run through this once before going live:
   `/api/account/delete`, `/api/waitlist`.
 - **Health probe.** `/api/health` pings the database and is marked
   `force-dynamic` so it isn't evaluated at build time.
-- **Webhook allowlist.** `proxy.ts` short-circuits webhook paths so the
+- **Webhook allowlist.** `src/proxy.ts` short-circuits webhook paths so the
   Supabase middleware never sees Stripe / LemonSqueezy / Mailgun traffic.
 - **PII redaction.** `src/lib/logger.ts` walks objects and replaces any key
   in the `PII_KEYS` set with `[REDACTED]` before logging.

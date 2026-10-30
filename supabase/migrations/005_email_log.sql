@@ -23,8 +23,8 @@ CREATE TABLE IF NOT EXISTS email_log (
   failure_reason TEXT,
   tags JSONB,
   metadata JSONB,
-  sent_at TIMESTAMP DEFAULT NOW() NOT NULL,
-  last_event_at TIMESTAMP DEFAULT NOW() NOT NULL
+  sent_at TIMESTAMPTZ DEFAULT NOW() NOT NULL,
+  last_event_at TIMESTAMPTZ DEFAULT NOW() NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS email_log_to_email_idx ON email_log (to_email);
