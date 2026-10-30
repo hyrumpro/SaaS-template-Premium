@@ -10,6 +10,7 @@
 
 import { sql } from "drizzle-orm";
 import { db } from "@/db";
+import { isShowcaseMode } from "@/lib/env-validation";
 
 // Health checks must run on every request so we always see the current
 // DB state. Disable build-time page data collection.
@@ -17,6 +18,20 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 export async function GET() {
+  // Showcase deployments have no database by design - report alive so
+  // hosting uptime checks do not fail a frontend-only demo.
+  if (isShowcaseMode()) {
+    return Response.json(
+      {
+        status: "showcase",
+        timestamp: new Date().toISOString(),
+        service: "ShipSaaS",
+        checks: { database: { ok: false, note: "SHOWCASE_MODE=true" } },
+      },
+      { status: 200 }
+    );
+  }
+
   let dbOk = true;
   let dbError: string | undefined;
 

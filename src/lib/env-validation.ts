@@ -7,7 +7,24 @@
 import { validatePaymentConfig } from "@/config/payments";
 import { logger } from "./logger";
 
+/**
+ * Showcase deployments set SHOWCASE_MODE=true to serve the public pages
+ * as a frontend-only demo with no database, auth, payment, or email
+ * configuration. Never enable it on a deployment that should handle
+ * real sign-ups or payments.
+ */
+export function isShowcaseMode() {
+  return process.env.SHOWCASE_MODE === "true";
+}
+
 export function validateRequiredEnvVars() {
+  if (isShowcaseMode()) {
+    logger.warn(
+      "SHOWCASE_MODE=true - skipping environment validation; auth, database, payments, and email are disabled"
+    );
+    return { valid: true, errors: [], showcase: true };
+  }
+
   const errors: string[] = [];
 
   // Required for all deployments

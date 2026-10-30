@@ -94,6 +94,13 @@ and email actually hit third-party APIs.
 1. Push the repo to GitHub.
 2. Import on Vercel.
 3. Add the env vars from `.env.example` in the Vercel dashboard.
+
+   **Frontend-only showcase deploy:** set `SHOWCASE_MODE=true` (and nothing
+   else) to put a demo online with no database, auth, payment, or email
+   configuration. Public pages render; API routes that need those services
+   return errors. Never use it for a deployment that handles real
+   sign-ups or payments.
+
 4. Apply `supabase/migrations/*.sql` to your Supabase project, including `006_webhook_processing.sql`.
 5. Configure Stripe (or LemonSqueezy) and Mailgun webhooks — URLs are
    documented in `src/app/docs/payments` and `src/app/docs/email`.
