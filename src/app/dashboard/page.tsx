@@ -11,9 +11,19 @@ import {
 
 import { createClient } from "@/lib/supabase/server";
 import { cookies } from "next/headers";
-import { getUserByEmail, getActiveSubscription, getUserPayments } from "@/db/queries";
+import {
+  getUserByEmail,
+  getActiveSubscription,
+  getUserPayments,
+} from "@/db/queries";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+} from "@/components/ui/card";
 import { StatusBadge } from "@/components/ui/status-badge";
 import { PageHeader, Section } from "@/components/dashboard/PageHeader";
 import { DashboardOverviewGreeting } from "@/components/dashboard/DashboardOverviewGreeting";
@@ -113,7 +123,7 @@ export default async function DashboardOverviewPage() {
               <CardDescription>Current plan</CardDescription>
               <Sparkles className="h-4 w-4 text-primary" />
             </div>
-            <CardTitle className="text-2xl">
+            <CardTitle className="text-2xl tabular-nums">
               {subscription ? subscription.planName : "Free"}
             </CardTitle>
           </CardHeader>
@@ -122,8 +132,12 @@ export default async function DashboardOverviewPage() {
               <div className="space-y-3">
                 <div className="flex items-center gap-2">
                   <StatusBadge
-                    tone={subscriptionTone(subscription.status as SubscriptionStatus)}
-                    label={subscriptionStatusLabel(subscription.status as SubscriptionStatus)}
+                    tone={subscriptionTone(
+                      subscription.status as SubscriptionStatus
+                    )}
+                    label={subscriptionStatusLabel(
+                      subscription.status as SubscriptionStatus
+                    )}
                     pulse={
                       subscription.status === "active" ||
                       subscription.status === "trialing"
@@ -136,9 +150,7 @@ export default async function DashboardOverviewPage() {
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                   <Calendar className="h-3.5 w-3.5" />
                   <span>
-                    {subscription.cancelAtPeriodEnd
-                      ? "Ends"
-                      : "Renews"}{" "}
+                    {subscription.cancelAtPeriodEnd ? "Ends" : "Renews"}{" "}
                     {formatDate(subscription.currentPeriodEnd)}
                   </span>
                 </div>
@@ -165,7 +177,7 @@ export default async function DashboardOverviewPage() {
               <CardDescription>Total spent</CardDescription>
               <TrendingUp className="h-4 w-4 text-muted-foreground" />
             </div>
-            <CardTitle className="text-2xl">
+            <CardTitle className="text-2xl tabular-nums">
               {formatMoney(totalSpentCents)}
             </CardTitle>
           </CardHeader>
@@ -188,8 +200,10 @@ export default async function DashboardOverviewPage() {
               <CardDescription>Last payment</CardDescription>
               <CreditCard className="h-4 w-4 text-muted-foreground" />
             </div>
-            <CardTitle className="text-2xl">
-              {lastPayment ? formatMoney(lastPayment.amount, lastPayment.currency) : "—"}
+            <CardTitle className="text-2xl tabular-nums">
+              {lastPayment
+                ? formatMoney(lastPayment.amount, lastPayment.currency)
+                : "—"}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -197,16 +211,16 @@ export default async function DashboardOverviewPage() {
               <div className="space-y-2">
                 <StatusBadge
                   tone={paymentTone(lastPayment.status)}
-                  label={paymentStatusLabel(lastPayment.status as PaymentStatus)}
+                  label={paymentStatusLabel(
+                    lastPayment.status as PaymentStatus
+                  )}
                 />
                 <p className="text-sm text-muted-foreground">
                   {formatRelativeTime(lastPayment.createdAt)}
                 </p>
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground">
-                No payments yet.
-              </p>
+              <p className="text-sm text-muted-foreground">No payments yet.</p>
             )}
           </CardContent>
         </Card>
@@ -246,15 +260,14 @@ export default async function DashboardOverviewPage() {
                           ? p.billingReason
                               .split("_")
                               .map(
-                                (w) =>
-                                  w.charAt(0).toUpperCase() + w.slice(1)
+                                (w) => w.charAt(0).toUpperCase() + w.slice(1)
                               )
                               .join(" ")
                           : "Payment"}
                       </p>
                       <p className="truncate text-xs text-muted-foreground">
-                        {p.provider === "stripe" ? "Stripe" : "LemonSqueezy"}{" "}
-                        · {formatDate(p.createdAt)}
+                        {p.provider === "stripe" ? "Stripe" : "LemonSqueezy"} ·{" "}
+                        {formatDate(p.createdAt)}
                       </p>
                     </div>
                   </div>

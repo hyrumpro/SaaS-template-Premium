@@ -38,7 +38,7 @@ export function DashboardOverviewGreeting({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
     >
-      <Card className="overflow-hidden border-border/60 bg-gradient-to-br from-card via-card to-primary/5">
+      <Card className="overflow-hidden border-border/60 bg-card">
         <CardContent className="flex flex-col gap-4 p-6 sm:flex-row sm:items-center sm:justify-between sm:p-8">
           <div className="flex items-center gap-4">
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary">
