@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     template: "%s | ShipSaaS",
   },
   description:
-    "Premium Next.js 16 SaaS foundation with authentication, payments, email, SEO, and a deployment-ready design system.",
+    "Premium Next.js 16 SaaS foundation with Supabase Auth on Postgres, Stripe and LemonSqueezy payments, Mailgun email, SEO, and a deployment-ready design system.",
   keywords: [
     "saas",
     "boilerplate",
