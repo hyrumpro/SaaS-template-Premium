@@ -33,7 +33,7 @@ export function LanguageSwitcher({ className }: { className?: string }) {
           aria-label={item.name}
           title={item.name}
           className={cn(
-            "rounded-sm px-2 py-1 text-xs font-medium transition-colors",
+            "min-h-[28px] rounded-sm px-3 py-1.5 text-xs font-medium transition-colors touch-manipulation",
             locale === item.value
               ? "bg-foreground text-background"
               : "text-muted-foreground hover:text-foreground"
