@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { FooterLegal } from "@/components/landing/FooterLegal";
 
 const groups = [
   {
@@ -69,12 +70,7 @@ export const Footer = () => {
         </div>
 
         <div className="border-border mt-12 flex flex-col items-start justify-between gap-4 border-t pt-6 text-sm md:flex-row md:items-center">
-          <p className="text-muted-foreground">
-            © {new Date().getFullYear()} ShipSaaS. All rights reserved.
-          </p>
-          <p className="text-muted-foreground">
-            Built with Next.js, Supabase, and Stripe.
-          </p>
+          <FooterLegal />
         </div>
       </div>
     </footer>

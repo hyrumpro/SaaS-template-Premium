@@ -6,6 +6,7 @@ import { cn } from "@/lib/utils";
 import { StructuredData } from "@/components/StructuredData";
 import { QueryProvider } from "@/providers/QueryProvider";
 import { ObservabilityProvider } from "@/providers/ObservabilityProvider";
+import { LocaleProvider } from "@/lib/i18n";
 
 const bricolageGrotesque = Bricolage_Grotesque({
   subsets: ["latin"],
@@ -139,9 +140,11 @@ export default function RootLayout({
         <StructuredData data={webAppSchema} />
       </head>
       <body className={cn(bricolageGrotesque.className, "antialiased")}>
-        <QueryProvider>
-          <ObservabilityProvider>{children}</ObservabilityProvider>
-        </QueryProvider>
+        <LocaleProvider>
+          <QueryProvider>
+            <ObservabilityProvider>{children}</ObservabilityProvider>
+          </QueryProvider>
+        </LocaleProvider>
       </body>
     </html>
   );

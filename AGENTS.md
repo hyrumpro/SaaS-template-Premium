@@ -76,6 +76,7 @@ src/
     rate-limit.ts         # in-memory token bucket (see SUGGESTIONS.md for Redis swap)
     logger.ts             # PII-redacting logger
     observability.ts      # opt-in PostHog + Sentry shim
+    i18n.tsx              # client-side EN/ES LocaleProvider + dictionaries
   hooks/                  # TanStack Query hooks (useAuth uses lazy Supabase client)
   providers/              # QueryProvider, ObservabilityProvider (PageviewTracker inside Suspense)
   utils/                  # stripe (Proxy), mailgun helpers
@@ -131,6 +132,17 @@ export async function POST(request: Request) {
 2. Add a new migration file in `supabase/migrations/` with the matching DDL
 3. Update any query helpers in `src/db/queries.ts`
 4. Run `npm run db:generate` to confirm types match
+
+### Adding a translated string
+
+The landing chrome is translated through the client-side `LocaleProvider` in
+`src/lib/i18n.tsx` (EN/ES, persisted in localStorage, `<html lang>` kept in
+sync, no hydration flash thanks to `useSyncExternalStore`). Add the key to
+both dictionaries and consume it with `useI18n()` from a client component;
+server components must not render translated copy. The `LanguageSwitcher` in
+the navbar is the entry point. For route-level i18n (`/es/...` URLs,
+localized posts, hreflang), adopt `next-intl` — the switcher demonstrates
+the pattern, not the ceiling.
 
 ### Adding a theme
 

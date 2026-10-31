@@ -96,6 +96,10 @@ export async function POST(request: Request) {
 
 Add a new entry to the `THEME_PRESETS` record in `src/config/theme.ts` (each preset is `{ name, primary: {h,s,l}, accent: {h,s,l} }`). At runtime, `applyTheme()` writes the CSS variables to `<html>` and persists the choice in localStorage. The dropdown `ThemeSwitcher` is playground-scoped (`src/components/playground/ui/ThemeSwitcher.tsx`) - there is no navbar switcher; dark variants live under a `.dark` class (Tailwind `class` strategy) with no built-in toggle.
 
+## i18n (EN/ES)
+
+- `src/lib/i18n.tsx` holds the EN/ES dictionaries and the locale store (built on `useSyncExternalStore` — no setState-in-effect, no hydration flash); `useI18n()` consumes it from client components only. The navbar `LanguageSwitcher` toggles EN/ES and persists to localStorage; `<html lang>` stays in sync. Route-level i18n: adopt `next-intl`.
+
 ## Things to avoid
 
 - Hardcoded colors in components

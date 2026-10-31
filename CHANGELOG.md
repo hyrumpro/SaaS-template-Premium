@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **Language switcher (EN/ES)** — client-side locale store built on `useSyncExternalStore` (no hydration flash, cross-tab sync via storage events), translated navbar + hero + footer, and an accessible segmented switcher in the navbar. Route-level i18n via `next-intl` is the documented upgrade path.
+
 ## [1.1.0] - 2026-10-30
 
 ### Fixed and hardened

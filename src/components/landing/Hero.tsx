@@ -1,8 +1,11 @@
+"use client";
+
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Check } from "lucide-react";
 import Link from "next/link";
 import { DashboardMockup } from "./HeroMockup";
+import { useI18n } from "@/lib/i18n";
 
 /**
  * Hero — premium-but-quiet Stripe/Linear showcase.
@@ -13,6 +16,8 @@ import { DashboardMockup } from "./HeroMockup";
  * Server component; the mockup carries a lightweight scroll-reveal.
  */
 export const Hero = () => {
+  const { t } = useI18n();
+
   return (
     <section className="relative overflow-hidden">
       {/* Soft token-based backdrop mesh */}
@@ -26,7 +31,7 @@ export const Hero = () => {
         <div className="max-w-3xl">
           <Badge variant="outline" className="mb-6 rounded-full px-3 py-1">
             <span className="text-muted-foreground text-xs font-medium">
-              Next.js 16 · Supabase · Postgres + RLS
+              {t.hero.badge}
             </span>
           </Badge>
 

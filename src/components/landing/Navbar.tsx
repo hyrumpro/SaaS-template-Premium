@@ -5,17 +5,20 @@ import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Logo } from "@/components/Logo";
-
-const navLinks = [
-  { label: "Features", href: "#features" },
-  { label: "Stack", href: "#stack" },
-  { label: "FAQ", href: "#faq" },
-  { label: "Blog", href: "/blog" },
-  { label: "Docs", href: "/docs" },
-];
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { useI18n } from "@/lib/i18n";
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { t } = useI18n();
+
+  const navLinks = [
+    { label: t.nav.features, href: "#features" },
+    { label: t.nav.stack, href: "#stack" },
+    { label: t.nav.faq, href: "#faq" },
+    { label: t.nav.blog, href: "/blog" },
+    { label: t.nav.docs, href: "/docs" },
+  ];
 
   return (
     <header className="border-border bg-background/80 supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50 w-full border-b backdrop-blur">
@@ -24,10 +27,7 @@ export const Navbar = () => {
           <Logo />
         </Link>
 
-        <nav
-          aria-label="Primary"
-          className="hidden items-center gap-6 md:flex"
-        >
+        <nav aria-label="Primary" className="hidden items-center gap-6 md:flex">
           {navLinks.map((link) => (
             <Link
               key={link.label}
@@ -40,11 +40,12 @@ export const Navbar = () => {
         </nav>
 
         <div className="hidden items-center gap-2 md:flex">
+          <LanguageSwitcher />
           <Button asChild variant="ghost" size="sm">
-            <Link href="/auth/login">Sign in</Link>
+            <Link href="/auth/login">{t.nav.signIn}</Link>
           </Button>
           <Button asChild size="sm">
-            <Link href="/auth/register">Get started</Link>
+            <Link href="/auth/register">{t.nav.getStarted}</Link>
           </Button>
         </div>
 
@@ -80,14 +81,15 @@ export const Navbar = () => {
               </Link>
             ))}
             <div className="mt-2 flex flex-col gap-2 border-t border-border pt-4">
+              <LanguageSwitcher className="self-start" />
               <Button asChild variant="outline">
                 <Link href="/auth/login" onClick={() => setIsOpen(false)}>
-                  Sign in
+                  {t.nav.signIn}
                 </Link>
               </Button>
               <Button asChild>
                 <Link href="/auth/register" onClick={() => setIsOpen(false)}>
-                  Get started
+                  {t.nav.getStarted}
                 </Link>
               </Button>
             </div>
