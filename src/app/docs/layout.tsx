@@ -5,6 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/Logo";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
+import { useI18n } from "@/lib/i18n";
 
 const guides = [
   { href: "/docs/email", title: "Email", desc: "Mailgun + DNS" },
@@ -22,6 +24,7 @@ const guides = [
 
 export default function DocsLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
+  const { t } = useI18n();
 
   return (
     <div className="min-h-screen">
@@ -30,18 +33,21 @@ export default function DocsLayout({ children }: { children: ReactNode }) {
           <Link href="/" aria-label="ShipSaaS home">
             <Logo />
           </Link>
-          <Link
-            href="/"
-            className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
-          >
-            Back to home
-          </Link>
+          <div className="flex items-center gap-3">
+            <LanguageSwitcher />
+            <Link
+              href="/"
+              className="text-muted-foreground hover:text-foreground text-sm font-medium transition-colors"
+            >
+              {t.docs.backHome}
+            </Link>
+          </div>
         </div>
       </header>
 
       <div className="mx-auto grid w-full max-w-6xl gap-10 px-6 py-12 md:grid-cols-[14rem_1fr] md:gap-12 md:py-16">
         <aside className="md:sticky md:top-24 md:self-start">
-          <p className="eyebrow">Documentation</p>
+          <p className="eyebrow">{t.docs.eyebrow}</p>
           <nav aria-label="Docs" className="mt-4 flex flex-col gap-1">
             {guides.map((g) => {
               const active = pathname === g.href;

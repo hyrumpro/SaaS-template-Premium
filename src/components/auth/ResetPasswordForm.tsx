@@ -9,8 +9,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthShell } from "@/components/auth/AuthShell";
 import { logger } from "@/lib/logger";
+import { useI18n } from "@/lib/i18n";
 
 export function ResetPasswordForm() {
+  const { t } = useI18n();
+  const copy = t.auth.reset;
   const router = useRouter();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -37,11 +40,11 @@ export function ResetPasswordForm() {
     setSuccessMessage("");
 
     if (password.length < 8) {
-      setErrorMessage("Password must be at least 8 characters.");
+      setErrorMessage(copy.minLength);
       return;
     }
     if (password !== confirmPassword) {
-      setErrorMessage("Passwords do not match.");
+      setErrorMessage(copy.mismatch);
       return;
     }
 
@@ -53,7 +56,7 @@ export function ResetPasswordForm() {
         setErrorMessage(error.message || "Failed to update password.");
       } else {
         logger.auth("password_reset_completed", undefined, true);
-        setSuccessMessage("Password updated. Redirecting to your dashboard...");
+        setSuccessMessage(copy.success);
         setTimeout(() => {
           router.push("/dashboard");
           router.refresh();
@@ -61,7 +64,7 @@ export function ResetPasswordForm() {
       }
     } catch (error) {
       logger.error("Unexpected password update error", error);
-      setErrorMessage("An unexpected error occurred. Please try again.");
+      setErrorMessage(copy.unexpected);
     } finally {
       setIsLoading(false);
     }
@@ -77,7 +80,7 @@ export function ResetPasswordForm() {
             href="/auth/login"
             className="text-foreground font-medium underline-offset-4 hover:underline"
           >
-            Back to sign in
+            {copy.footerLink}
           </Link>
         }
       >
@@ -89,8 +92,8 @@ export function ResetPasswordForm() {
   if (!hasSession) {
     return (
       <AuthShell
-        title="Reset link expired"
-        subtitle="This reset link is no longer valid. Request a new one and try again."
+        title={copy.expiredTitle}
+        subtitle={copy.expiredSubtitle}
         footer={
           <Link
             href="/auth/forgot-password"
@@ -101,7 +104,7 @@ export function ResetPasswordForm() {
         }
       >
         <Button asChild variant="outline" className="w-full">
-          <Link href="/auth/forgot-password">Send another reset link</Link>
+          <Link href="/auth/forgot-password">{copy.expiredCta}</Link>
         </Button>
       </AuthShell>
     );
@@ -109,8 +112,8 @@ export function ResetPasswordForm() {
 
   return (
     <AuthShell
-      title="Set a new password"
-      subtitle="Choose a new password for your account. Use at least 8 characters."
+      title={copy.title}
+      subtitle={copy.subtitle}
       footer={
         <Link
           href="/auth/login"
@@ -134,7 +137,7 @@ export function ResetPasswordForm() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
-          <Label htmlFor="password">New password</Label>
+          <Label htmlFor="password">{copy.newLabel}</Label>
           <Input
             id="password"
             type="password"
@@ -147,7 +150,7 @@ export function ResetPasswordForm() {
           />
         </div>
         <div className="space-y-1.5">
-          <Label htmlFor="confirm">Confirm new password</Label>
+          <Label htmlFor="confirm">{copy.confirmLabel}</Label>
           <Input
             id="confirm"
             type="password"
@@ -160,7 +163,7 @@ export function ResetPasswordForm() {
           />
         </div>
         <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? "Updating..." : "Update password"}
+          {isLoading ? copy.submitting : copy.submit}
         </Button>
       </form>
     </AuthShell>

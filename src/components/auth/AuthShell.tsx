@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/Logo";
+import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { cn } from "@/lib/utils";
 
 /**
@@ -22,10 +23,11 @@ export function AuthShell({
   return (
     <div className="bg-background min-h-screen">
       <header className="border-border border-b">
-        <div className="mx-auto flex h-14 w-full max-w-6xl items-center px-6">
+        <div className="mx-auto flex h-14 w-full max-w-6xl items-center justify-between px-6">
           <Link href="/" aria-label="ShipSaaS home">
             <Logo />
           </Link>
+          <LanguageSwitcher />
         </div>
       </header>
 

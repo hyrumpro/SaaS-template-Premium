@@ -8,8 +8,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { AuthShell } from "@/components/auth/AuthShell";
 import { logger } from "@/lib/logger";
+import { useI18n } from "@/lib/i18n";
 
 export function ForgotPasswordForm() {
+  const { t } = useI18n();
+  const copy = t.auth.forgot;
   const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -32,18 +35,14 @@ export function ForgotPasswordForm() {
 
       if (error) {
         logger.error("Password reset request failed", error);
-        setErrorMessage(
-          error.message || "Failed to send reset email. Please try again.",
-        );
+        setErrorMessage(error.message || copy.failed);
       } else {
         logger.auth("password_reset_requested", email, true);
-        setSuccessMessage(
-          "If an account exists for that email, a reset link is on its way. Check your inbox.",
-        );
+        setSuccessMessage(copy.success);
       }
     } catch (error) {
       logger.error("Unexpected password reset error", error);
-      setErrorMessage("An unexpected error occurred. Please try again.");
+      setErrorMessage(copy.unexpected);
     } finally {
       setIsLoading(false);
     }
@@ -51,16 +50,16 @@ export function ForgotPasswordForm() {
 
   return (
     <AuthShell
-      title="Forgot your password?"
-      subtitle="Enter your email and we'll send you a link to choose a new password."
+      title={copy.title}
+      subtitle={copy.subtitle}
       footer={
         <p className="text-muted-foreground">
-          Remembered it?{" "}
+          {copy.footerText}{" "}
           <Link
             href="/auth/login"
             className="text-foreground font-medium underline-offset-4 hover:underline"
           >
-            Back to sign in
+            {copy.footerLink}
           </Link>
         </p>
       }
@@ -79,7 +78,7 @@ export function ForgotPasswordForm() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="space-y-1.5">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">{copy.emailLabel}</Label>
           <Input
             id="email"
             type="email"
@@ -92,7 +91,7 @@ export function ForgotPasswordForm() {
           />
         </div>
         <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? "Sending..." : "Send reset link"}
+          {isLoading ? copy.sending : copy.submit}
         </Button>
       </form>
     </AuthShell>

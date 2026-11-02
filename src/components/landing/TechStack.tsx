@@ -1,55 +1,11 @@
-type Item = { name: string; note: string };
+"use client";
 
-const groups: { category: string; items: Item[] }[] = [
-  {
-    category: "Frontend",
-    items: [
-      { name: "Next.js 16", note: "App Router, Turbopack, Server Actions" },
-      { name: "React 19", note: "Server Components by default" },
-      {
-        name: "TypeScript",
-        note: "strict mode with explicit integration boundaries",
-      },
-      { name: "Tailwind CSS", note: "CSS-variable tokens, no inline colors" },
-      { name: "Radix UI", note: "Headless primitives, fully accessible" },
-      { name: "TanStack Query", note: "Server-state cache, devtools in dev" },
-    ],
-  },
-  {
-    category: "Backend",
-    items: [
-      { name: "Supabase", note: "Auth, Postgres, RLS, and session management" },
-      { name: "Drizzle ORM", note: "Schema → types → queries" },
-      { name: "Next.js Route Handlers", note: "Typed, rate-limited, signed" },
-    ],
-  },
-  {
-    category: "Payments",
-    items: [
-      {
-        name: "Stripe",
-        note: "Subscriptions, portal, signed retry-safe webhooks",
-      },
-      {
-        name: "LemonSqueezy",
-        note: "Alternative provider behind the same plan API",
-      },
-    ],
-  },
-  {
-    category: "Infra",
-    items: [
-      {
-        name: "Mailgun",
-        note: "Transactional email, delivery hooks, DNS checklist",
-      },
-      { name: "Docker", note: "Dev + production compose files" },
-      { name: "PostHog + Sentry", note: "Opt-in shim, no SDK at install" },
-    ],
-  },
-];
+import { useI18n } from "@/lib/i18n";
 
 export const TechStack = () => {
+  const { t } = useI18n();
+  const { techStack } = t.sections;
+
   return (
     <section
       id="stack"
@@ -58,18 +14,17 @@ export const TechStack = () => {
     >
       <div className="section">
         <div className="max-w-2xl">
-          <p className="eyebrow">Stack</p>
+          <p className="eyebrow">{techStack.eyebrow}</p>
           <h2 id="stack-heading" className="text-display mt-3 text-balance">
-            Boring, deliberate choices.
+            {techStack.title}
           </h2>
           <p className="text-foreground/70 mt-4 text-base leading-relaxed md:text-lg">
-            Tools picked for stability and the developer experience. Nothing
-            here is a fad.
+            {techStack.subtitle}
           </p>
         </div>
 
         <dl className="mt-12 grid grid-cols-1 gap-x-12 gap-y-10 md:grid-cols-2 lg:grid-cols-4">
-          {groups.map(({ category, items }) => (
+          {techStack.groups.map(({ category, items }) => (
             <div key={category}>
               <dt className="text-foreground text-sm font-semibold tracking-tight">
                 {category}

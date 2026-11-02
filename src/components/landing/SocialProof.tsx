@@ -1,19 +1,16 @@
 "use client";
 
 import { motion } from "framer-motion";
-
-const stats = [
-  { value: "55+", label: "components", note: "ready to copy & customize" },
-  { value: "24", label: "themes", note: "light + dark, all CSS variables" },
-  { value: "2", label: "payment providers", note: "Stripe + LemonSqueezy" },
-  { value: "10", label: "email templates", note: "branded via env vars" },
-];
+import { useI18n } from "@/lib/i18n";
 
 /**
  * Compact stats / social-proof band. Quiet tokens only; each stat fades in
  * with a tiny rise on scroll. `prefers-reduced-motion` honored globally.
  */
 export const SocialProof = () => {
+  const { t } = useI18n();
+  const { stats } = t.sections.socialProof;
+
   return (
     <section
       aria-label="Template stats"

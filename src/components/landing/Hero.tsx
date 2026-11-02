@@ -13,7 +13,7 @@ import { useI18n } from "@/lib/i18n";
  * entirely from theme tokens (no images, no glass, no loud glow). A soft
  * `--gradient-fade` mesh adds depth without breaking the design system.
  *
- * Server component; the mockup carries a lightweight scroll-reveal.
+ * Client component; the copy follows the navbar language switcher.
  */
 export const Hero = () => {
   const { t } = useI18n();
@@ -36,38 +36,31 @@ export const Hero = () => {
           </Badge>
 
           <h1 className="text-display-xl text-balance text-foreground">
-            A premium Next.js template for shipping your SaaS faster.
+            {t.hero.title}
           </h1>
 
           <p className="text-foreground/70 mt-6 max-w-2xl text-lg leading-relaxed md:text-xl">
-            Supabase Auth on Postgres with row-level security, Stripe and
-            LemonSqueezy payments, Mailgun email, and a real dashboard.
-            Production-ready code, end-to-end types, and the architecture most
-            templates make you build yourself.
+            {t.hero.subtitle}
           </p>
 
           <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <Button asChild size="xl">
               <Link href="/auth/register">
-                Create an account
+                {t.hero.ctaPrimary}
                 <ArrowRight className="size-4" />
               </Link>
             </Button>
             <Button asChild size="xl" variant="outline">
-              <Link href="/playground">Browse components</Link>
+              <Link href="/playground">{t.hero.ctaSecondary}</Link>
             </Button>
           </div>
 
           <p className="text-muted-foreground mt-6 text-sm">
-            Free to start. No credit card required.
+            {t.hero.freeNote}
           </p>
 
           <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
-            {[
-              "Supabase Auth + RLS",
-              "Stripe & LemonSqueezy",
-              "55+ components",
-            ].map((item) => (
+            {t.hero.checks.map((item) => (
               <li
                 key={item}
                 className="flex items-center gap-1.5 text-sm text-foreground/70"

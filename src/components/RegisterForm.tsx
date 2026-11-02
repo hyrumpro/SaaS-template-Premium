@@ -11,8 +11,11 @@ import { AuthShell } from "@/components/auth/AuthShell";
 import { validateForm, CommonRules, hasErrors } from "@/lib/validation";
 import { logger } from "@/lib/logger";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 export function RegisterForm() {
+  const { t } = useI18n();
+  const copy = t.auth.register;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -38,7 +41,7 @@ export function RegisterForm() {
     );
 
     if (password !== confirmPassword) {
-      validationErrors.confirmPassword = "Passwords do not match";
+      validationErrors.confirmPassword = copy.mismatch;
     }
 
     if (hasErrors(validationErrors)) {
@@ -64,15 +67,13 @@ export function RegisterForm() {
         logger.error("Registration failed", error, { email });
 
         if (error.message.includes("already registered")) {
-          setErrorMessage(
-            "This email is already registered. Please sign in instead."
-          );
+          setErrorMessage(copy.alreadyRegistered);
         } else if (error.message.includes("weak password")) {
           setErrors({
-            password: "Password is too weak. Please choose a stronger one.",
+            password: copy.weakPassword,
           });
         } else {
-          setErrorMessage(error.message || "Registration failed. Please try again.");
+          setErrorMessage(error.message || copy.unexpected);
         }
         return;
       }
@@ -80,18 +81,16 @@ export function RegisterForm() {
       logger.auth("register", data.user?.id, true);
 
       if (data.user && !data.session) {
-        setSuccessMessage(
-          "Account created! Check your email to verify your account."
-        );
+        setSuccessMessage(copy.success);
       } else {
-        setSuccessMessage("Account created successfully!");
+        setSuccessMessage(copy.success);
         setTimeout(() => {
           router.push("/dashboard");
         }, 1500);
       }
     } catch (err) {
       logger.error("Unexpected registration error", err);
-      setErrorMessage("An unexpected error occurred. Please try again.");
+      setErrorMessage(copy.unexpected);
     } finally {
       setIsLoading(false);
     }
@@ -99,16 +98,16 @@ export function RegisterForm() {
 
   return (
     <AuthShell
-      title="Create your account"
-      subtitle="Free to start. No credit card required."
+      title={copy.title}
+      subtitle={copy.subtitle}
       footer={
         <p className="text-muted-foreground">
-          Already have an account?{" "}
+          {copy.footerText}{" "}
           <Link
             href="/auth/login"
             className="text-foreground font-medium underline-offset-4 hover:underline"
           >
-            Sign in
+            {copy.footerLink}
           </Link>
         </p>
       }
@@ -127,7 +126,7 @@ export function RegisterForm() {
 
       <form onSubmit={handleRegister} className="space-y-4">
         <div className="space-y-1.5">
-          <Label htmlFor="email">Email</Label>
+          <Label htmlFor="email">{copy.emailLabel}</Label>
           <Input
             id="email"
             type="email"
@@ -146,17 +145,14 @@ export function RegisterForm() {
             autoComplete="email"
           />
           {errors.email && (
-            <p
-              id="email-error"
-              className="text-destructive text-xs"
-            >
+            <p id="email-error" className="text-destructive text-xs">
               {errors.email}
             </p>
           )}
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="password">Password</Label>
+          <Label htmlFor="password">{copy.passwordLabel}</Label>
           <Input
             id="password"
             type="password"
@@ -175,20 +171,15 @@ export function RegisterForm() {
             autoComplete="new-password"
           />
           {errors.password && (
-            <p
-              id="password-error"
-              className="text-destructive text-xs"
-            >
+            <p id="password-error" className="text-destructive text-xs">
               {errors.password}
             </p>
           )}
-          <p className="text-muted-foreground text-xs">
-            At least 8 characters with uppercase, lowercase, and a number.
-          </p>
+          <p className="text-muted-foreground text-xs">{copy.passwordHelper}</p>
         </div>
 
         <div className="space-y-1.5">
-          <Label htmlFor="confirmPassword">Confirm password</Label>
+          <Label htmlFor="confirmPassword">{copy.confirmLabel}</Label>
           <Input
             id="confirmPassword"
             type="password"
@@ -209,17 +200,14 @@ export function RegisterForm() {
             autoComplete="new-password"
           />
           {errors.confirmPassword && (
-            <p
-              id="confirm-password-error"
-              className="text-destructive text-xs"
-            >
+            <p id="confirm-password-error" className="text-destructive text-xs">
               {errors.confirmPassword}
             </p>
           )}
         </div>
 
         <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? "Creating account..." : "Create account"}
+          {isLoading ? copy.submitting : copy.submit}
         </Button>
       </form>
     </AuthShell>

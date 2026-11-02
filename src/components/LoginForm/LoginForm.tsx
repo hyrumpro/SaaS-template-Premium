@@ -10,10 +10,13 @@ import { Label } from "@/components/ui/label";
 import { AuthShell } from "@/components/auth/AuthShell";
 import { logger } from "@/lib/logger";
 import { cn } from "@/lib/utils";
+import { useI18n } from "@/lib/i18n";
 
 type LoginMode = "password" | "magic-link";
 
 export function LoginForm() {
+  const { t } = useI18n();
+  const copy = t.auth.login;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginMode, setLoginMode] = useState<LoginMode>("password");
@@ -37,7 +40,7 @@ export function LoginForm() {
 
       if (error) {
         logger.error("Password login failed", error);
-        setErrorMessage(error.message || "Failed to login. Please check your credentials.");
+        setErrorMessage(error.message || copy.invalidCredentials);
       } else {
         logger.auth("login_password", email, true);
         setSuccessMessage("Login successful! Redirecting...");
@@ -46,7 +49,7 @@ export function LoginForm() {
       }
     } catch (error) {
       logger.error("Unexpected login error", error);
-      setErrorMessage("An unexpected error occurred. Please try again.");
+      setErrorMessage(copy.unexpected);
     } finally {
       setIsLoading(false);
     }
@@ -68,16 +71,14 @@ export function LoginForm() {
 
       if (error) {
         logger.error("Magic link login failed", error);
-        setErrorMessage(error.message || "Failed to send magic link. Please try again.");
+        setErrorMessage(error.message || copy.magicError);
       } else {
         logger.auth("login_magic_link", email, true);
-        setSuccessMessage(
-          "Magic link sent! Check your email to complete the login."
-        );
+        setSuccessMessage(copy.magicSent);
       }
     } catch (error) {
       logger.error("Unexpected magic link error", error);
-      setErrorMessage("An unexpected error occurred. Please try again.");
+      setErrorMessage(copy.unexpected);
     } finally {
       setIsLoading(false);
     }
@@ -101,28 +102,28 @@ export function LoginForm() {
 
       if (error) {
         logger.error("Google login failed", error);
-        setErrorMessage(error.message || "Failed to login with Google.");
+        setErrorMessage(error.message || copy.googleError);
         setIsLoading(false);
       }
     } catch (error) {
       logger.error("Unexpected Google login error", error);
-      setErrorMessage("An unexpected error occurred. Please try again.");
+      setErrorMessage(copy.unexpected);
       setIsLoading(false);
     }
   };
 
   return (
     <AuthShell
-      title="Sign in"
-      subtitle="Use your email and password, or get a magic link sent to your inbox."
+      title={copy.title}
+      subtitle={copy.subtitle}
       footer={
         <p className="text-muted-foreground">
-          Don&apos;t have an account?{" "}
+          {copy.footerText}{" "}
           <Link
             href="/auth/register"
             className="text-foreground font-medium underline-offset-4 hover:underline"
           >
-            Create one
+            {copy.footerLink}
           </Link>
         </p>
       }
@@ -152,7 +153,7 @@ export function LoginForm() {
                 : "text-muted-foreground hover:text-foreground"
             )}
           >
-            Password
+            {copy.modePassword}
           </button>
           <button
             type="button"
@@ -165,7 +166,7 @@ export function LoginForm() {
                 : "text-muted-foreground hover:text-foreground"
             )}
           >
-            Magic link
+            {copy.modeMagic}
           </button>
         </div>
       </div>
@@ -173,7 +174,7 @@ export function LoginForm() {
       {loginMode === "password" ? (
         <form onSubmit={handlePasswordLogin} className="mt-6 space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email">{copy.emailLabel}</Label>
             <Input
               id="email"
               type="email"
@@ -185,7 +186,7 @@ export function LoginForm() {
             />
           </div>
           <div className="space-y-1.5">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">{copy.passwordLabel}</Label>
             <Input
               id="password"
               type="password"
@@ -197,13 +198,13 @@ export function LoginForm() {
             />
           </div>
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Signing in..." : "Sign in"}
+            {isLoading ? copy.submitting : copy.submit}
           </Button>
         </form>
       ) : (
         <form onSubmit={handleMagicLinkLogin} className="mt-6 space-y-4">
           <div className="space-y-1.5">
-            <Label htmlFor="email-magic">Email</Label>
+            <Label htmlFor="email-magic">{copy.emailLabel}</Label>
             <Input
               id="email-magic"
               type="email"
@@ -213,12 +214,10 @@ export function LoginForm() {
               required
               autoComplete="email"
             />
-            <p className="text-muted-foreground text-xs">
-              We&apos;ll email you a one-time sign-in link.
-            </p>
+            <p className="text-muted-foreground text-xs">{copy.magicNote}</p>
           </div>
           <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Sending..." : "Send magic link"}
+            {isLoading ? copy.magicSending : copy.magicSubmit}
           </Button>
         </form>
       )}
@@ -228,7 +227,7 @@ export function LoginForm() {
           href="/auth/forgot-password"
           className="text-muted-foreground hover:text-foreground text-xs underline-offset-4 hover:underline"
         >
-          Forgot your password?
+          {copy.forgot}
         </Link>
       </div>
 
@@ -238,7 +237,7 @@ export function LoginForm() {
         </div>
         <div className="relative flex justify-center text-xs">
           <span className="bg-background text-muted-foreground px-2 uppercase tracking-wider">
-            Or
+            {copy.or}
           </span>
         </div>
       </div>
@@ -250,11 +249,7 @@ export function LoginForm() {
         onClick={handleGoogleLogin}
         disabled={isLoading}
       >
-        <svg
-          className="mr-2 h-4 w-4"
-          viewBox="0 0 24 24"
-          aria-hidden
-        >
+        <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24" aria-hidden>
           <path
             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
             fill="#4285F4"
@@ -272,7 +267,7 @@ export function LoginForm() {
             fill="#EA4335"
           />
         </svg>
-        Continue with Google
+        {copy.google}
       </Button>
     </AuthShell>
   );
